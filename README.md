@@ -34,9 +34,11 @@ image_bytes = generate_image(
     model_version="gemini-2.5-flash-image",
     generation_params={
         "generationConfig": {
-            "imageConfig": {"aspect_ratio": "16:9"},
+            "imageConfig": {
+                "aspect_ratio": "16:9",
+            },
         }
-    },
+    }
 )
 
 with open("out.png", "wb") as f:
