@@ -5,9 +5,10 @@ Python library for generating images with Google Gemini or OpenAI.
 
 Install
 -------
+Install from GitHub:
 
 ```bash
-uv sync
+pip pip install git+https://github.com/paulovsantanas/image-generator.git
 ```
 
 Environment
