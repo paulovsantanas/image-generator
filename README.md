@@ -8,7 +8,7 @@ Install
 Install from GitHub:
 
 ```bash
-pip pip install git+https://github.com/paulovsantanas/image-generator.git
+pip install git+https://github.com/paulovsantanas/image-generator.git
 ```
 
 Environment
