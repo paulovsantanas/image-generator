@@ -2,5 +2,6 @@ from enum import Enum
 
 
 class Provider(str, Enum):
-    GOOGLE = "google"
     OPENAI = "openai"
+    GOOGLE = "google"
+    HUGGINGFACE = "huggingface"
