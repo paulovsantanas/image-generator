@@ -2,14 +2,20 @@ import base64
 import os
 from typing import Any
 
-from google import genai
-
 from image_generator.errors import ConfigurationError, ImageGenerationError
 from image_generator.providers.base import ImageProvider
 
 
 class GeminiProvider(ImageProvider):
     def generate(self, prompt: str, generation_params: dict[str, Any] | None = None) -> bytes:
+        try:
+            from google import genai
+        except ImportError as exc:
+            raise ConfigurationError(
+                'Google Gemini dependencies are not installed. Install them with '
+                '`pip install "image-generator[google]"` before using Provider.GOOGLE.'
+            ) from exc
+
         api_key = self._get_api_key()
         client = genai.Client(api_key=api_key)
 

@@ -1,16 +1,24 @@
 from io import BytesIO
 from typing import Any
 
-import torch
-from diffusers import DiffusionPipeline
-
-from image_generator.errors import ImageGenerationError
+from image_generator.errors import ConfigurationError, ImageGenerationError
 from image_generator.providers.base import ImageProvider
 
 
 class HuggingFaceProvider(ImageProvider):
     def __init__(self, model: str):
         super().__init__(model)
+        try:
+            import torch
+            from diffusers import DiffusionPipeline
+        except ImportError as exc:
+            raise ConfigurationError(
+                'HuggingFace dependencies are not installed. Install them with '
+                '`pip install "image-generator[huggingface]"` before using '
+                "Provider.HUGGINGFACE."
+            ) from exc
+
+        self._torch = torch
         self._device = "cuda" if torch.cuda.is_available() else "cpu"
         self._dtype = torch.bfloat16 if self._device == "cuda" else torch.float32
         self._pipeline = DiffusionPipeline.from_pretrained(
@@ -42,7 +50,7 @@ class HuggingFaceProvider(ImageProvider):
         if guidance_scale is not None:
             pipe_kwargs["guidance_scale"] = guidance_scale
         if seed is not None:
-            pipe_kwargs["generator"] = torch.Generator(device=self._device).manual_seed(seed)
+            pipe_kwargs["generator"] = self._torch.Generator(device=self._device).manual_seed(seed)
 
         pipe_kwargs.update(params)
 
